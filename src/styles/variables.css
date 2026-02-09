@@ -1,0 +1,58 @@
+:root {
+  /* Colors - Restored Light Theme */
+  --color-primary: hsl(220, 10%, 10%);
+  /* Off-Black */
+  --color-primary-light: hsl(220, 10%, 20%);
+
+  --color-accent: hsl(150, 60%, 45%);
+  /* Mint Green */
+  --color-accent-dark: hsl(150, 60%, 35%);
+  --color-accent-light: hsl(150, 60%, 95%);
+
+  --color-surface: hsl(0, 0%, 98%);
+  /* Page Background */
+  --color-surface-alt: hsl(0, 0%, 100%);
+  /* Card Background */
+
+  --color-text-main: hsl(220, 10%, 10%);
+  --color-text-secondary: hsl(220, 10%, 45%);
+  --color-text-inverse: hsl(0, 0%, 100%);
+
+  --color-error: hsl(0, 70%, 60%);
+  --color-success: hsl(150, 60%, 45%);
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* Typography */
+  --font-family: 'Outfit', sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 2rem;
+
+  /* Borders & Shadows */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 15px var(--color-accent-blue-glow);
+
+  /* Animation */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

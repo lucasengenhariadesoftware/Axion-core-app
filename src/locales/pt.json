@@ -1,0 +1,40 @@
+{
+    "app": {
+        "name": "AXION CORE"
+    },
+    "onboarding": {
+        "welcome_title": "Vamos começar",
+        "welcome_subtitle": "Seu corpo, seu ritmo. Acompanhe sua evolução de forma simples e eficiente.",
+        "start_btn": "Começar Jornada",
+        "step_name_title": "Como você gostaria de ser chamado?",
+        "step_name_placeholder": "Seu nome ou apelido",
+        "next_btn": "Próximo"
+    },
+    "menu": {
+        "today": "Hoje",
+        "workout": "Treino",
+        "diet": "Dieta",
+        "run": "Corrida",
+        "evolution": "Medidas",
+        "profile": "Perfil"
+    },
+    "today": {
+        "title": "Hoje",
+        "routine": "Sua Rotina"
+    },
+    "profile": {
+        "member_since": "Membro AXION CORE",
+        "settings": "Configurações",
+        "edit_profile": "Editar Perfil",
+        "home_config": "Adaptar Treino em Casa",
+        "my_progress": "Meu Progresso",
+        "home": "Início",
+        "logout": "Sair / Resetar",
+        "be_pro": "Seja PRO",
+        "unlock_all": "Desbloqueie todos os recursos",
+        "version": "Versão"
+    },
+    "subscription": {
+        "cancel_anytime": "A assinatura pode ser cancelada a qualquer momento pelas configurações da Google Play Store."
+    }
+}

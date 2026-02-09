@@ -1,0 +1,448 @@
+/* Workout.css - Premium Workout Tab Styles */
+
+.workout-tab-container {
+    padding-top: 24px;
+    padding-bottom: 112px;
+    /* Navigation bar spacing */
+}
+
+/* Header Section */
+.workout-header {
+    margin-bottom: 32px;
+}
+
+.user-greeting {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin-bottom: 4px;
+}
+
+.page-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.header-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.btn-icon-soft {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border-subtle, #e2e8f0);
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-icon-soft:hover {
+    background-color: #f1f5f9;
+    color: var(--color-text-main);
+}
+
+
+/* Header - Minimal Style */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+}
+
+.text-content {
+    flex: 1;
+}
+
+.user-greeting {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.minimal-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-main);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+}
+
+.minimal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-primary);
+    background-color: #f1f5f9;
+    padding: 6px 12px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    margin-top: 24px;
+}
+
+.minimal-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.meta-separator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+}
+
+/* Magic Button - Outline Style */
+.btn-magic {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: var(--color-primary, #0f172a);
+    border: 1px solid var(--color-border-subtle, #e2e8f0);
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    margin-top: 24px;
+}
+
+.btn-magic:hover {
+    transform: translateY(-2px);
+    box-shadow: none;
+    border-color: var(--color-primary, #0f172a);
+}
+
+.btn-magic:active {
+    transform: scale(0.95);
+}
+
+/* Calendar Strip */
+.calendar-section {
+    margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.section-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+.calendar-strip {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.calendar-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.day-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 72px;
+    border-radius: 16px;
+    border: 1px solid transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.day-btn.inactive {
+    background-color: white;
+    border-color: #f1f5f9;
+}
+
+.day-btn.inactive .day-label {
+    color: #94a3b8;
+}
+
+.day-btn.inactive .day-number {
+    color: #334155;
+}
+
+.day-btn.active {
+    background-color: var(--color-primary, #0f172a);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+}
+
+.day-btn:hover:not(.active) {
+    border-color: #cbd5e1;
+}
+
+.day-label {
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+}
+
+.day-number {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.active-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-primary, #0f172a);
+    margin-top: 4px;
+}
+
+/* Workout Cards */
+.workouts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.workout-card {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.workout-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.05);
+    border-color: #e2e8f0;
+}
+
+.workout-card-deco {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 0 0 0 100%;
+    z-index: 0;
+    margin-right: -16px;
+    margin-top: -16px;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.workout-card:hover .workout-card-deco {
+    opacity: 1;
+}
+
+.card-content-wrapper {
+    position: relative;
+    z-index: 10;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.day-badge {
+    background-color: #f1f5f9;
+    color: #475569;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.duration-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #94a3b8;
+}
+
+.card-title-section {
+    margin-bottom: 20px;
+}
+
+.workout-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--color-text-main);
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.workout-focus {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.exercises-preview {
+    display: flex;
+    gap: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.exercise-chip {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.more-chip {
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #f8fafc;
+}
+
+.exercise-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: #94a3b8;
+}
+
+.btn-start {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-text-main);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.btn-start:hover {
+    color: var(--color-primary);
+    /* Assuming blue/primary color */
+}
+
+.icon-circle-small {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--color-primary, #0f172a);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-start:hover .icon-circle-small {
+    background-color: #1e40af;
+    /* Dark blue or primary variant */
+}
+
+/* Loading State */
+.loading-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 20px;
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e2e8f0;
+    border-top-color: var(--color-primary, #0f172a);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
