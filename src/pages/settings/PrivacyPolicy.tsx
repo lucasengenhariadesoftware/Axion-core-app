@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
                 </p>
 
                 <p style={{ fontSize: '12px', opacity: 0.7, marginBottom: '32px' }}>
-                    Última atualização: 08 de Fevereiro de 2026
+                    Última atualização: 19 de Fevereiro de 2026
                 </p>
 
                 <Section title="1. Coleta e Armazenamento de Dados">
@@ -76,6 +76,7 @@ export default function PrivacyPolicy() {
                     <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '8px' }}>
                         <li><strong>Câmera e Galeria:</strong> Para permitir que você adicione fotos ao seu perfil ou diário de evolução.</li>
                         <li><strong>Notificações:</strong> Para lembretes de treino e relatórios semanais.</li>
+                        <li><strong>Músicas e Áudio:</strong> O app acessa arquivos de áudio locais para permitir que o usuário selecione músicas do próprio dispositivo para reprodução durante o treino.</li>
                     </ul>
                 </Section>
 

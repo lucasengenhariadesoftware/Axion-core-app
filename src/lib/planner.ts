@@ -37,7 +37,7 @@ export const generateDailyPlan = (profile: UserProfile): DailyPlan => {
 
     // Build Diet Preferences from Profile
     const dietPrefs: DietPreferences = {
-        goal: profile.goal,
+        goal: profile.goal as any,
         dietType: 'omnivore', // Default, should be in profile ideally
         cookingTime: 'moderate',
         mealsPerDay: 4,

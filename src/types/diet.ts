@@ -3,6 +3,8 @@ export type Goal = 'lose_weight' | 'gain_muscle' | 'maintain' | 'definition' | '
 export type DietType = 'omnivore' | 'vegetarian' | 'vegan' | 'low_carb';
 export type CookingTime = 'fast' | 'moderate' | 'elaborate';
 
+export type Gender = 'male' | 'female';
+
 export interface DietPreferences {
     goal: Goal;
     dietType: DietType;
@@ -11,7 +13,7 @@ export interface DietPreferences {
     allergies: string[]; // ['lactose', 'gluten', 'peanuts', etc]
     isSimpleMode: boolean; // Menos opções, mais direto
     budget: 'economic' | 'standard' | 'premium';
-    gender?: 'male' | 'female';
+    gender?: Gender;
 }
 
 export type FoodTag =

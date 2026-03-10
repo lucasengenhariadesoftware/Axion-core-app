@@ -1,7 +1,7 @@
 import { AdMob, RewardAdPluginEvents, AdMobRewardItem } from '@capacitor-community/admob';
 import { Capacitor } from '@capacitor/core';
 
-const APP_ID = 'ca-app-pub-7774247906326215~3772780236';
+
 const TEST_AD_UNIT_ID = 'ca-app-pub-3940256099942544/5354046379'; // Rewarded Interstitial Test
 const PRODUCTION_AD_UNIT_ID = 'ca-app-pub-7774247906326215/2499588407';
 
@@ -40,7 +40,6 @@ class AdService {
 
         try {
             await AdMob.initialize({
-                requestTrackingAuthorization: true,
                 initializeForTesting: this.isDev,
             });
             console.log('AdService: AdMob initialized.');
@@ -135,25 +134,25 @@ class AdService {
             // NATIVE IMPLEMENTATION
             let earnedReward = false;
 
-            const onRewardListener = AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: AdMobRewardItem) => {
+            const rewardListenerHandle = await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward: AdMobRewardItem) => {
                 console.log('AdService: Reward earned!', reward);
                 earnedReward = true;
             });
 
-            const onDismissListener = AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
+            const dismissListenerHandle = await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
                 console.log('AdService: Ad dismissed.');
-                onRewardListener.remove();
-                onDismissListener.remove();
+                rewardListenerHandle.remove();
+                dismissListenerHandle.remove();
                 this.isAdLoaded = false;
                 this.loadRewardedAd(); // Reload for next time
                 resolve(earnedReward);
             });
 
-            const onFailedListener = AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (err) => {
+            const failedListenerHandle = await AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (err) => {
                 console.error('AdService: Ad failed to show', err);
-                onRewardListener.remove();
-                onDismissListener.remove();
-                onFailedListener.remove();
+                rewardListenerHandle.remove();
+                dismissListenerHandle.remove();
+                failedListenerHandle.remove();
                 resolve(false);
             });
 

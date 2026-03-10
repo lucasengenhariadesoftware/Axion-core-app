@@ -14,7 +14,8 @@ export interface BodyMeasures {
     calfLeft: number;
 }
 
-import { BodyRecord } from '../types';
+import { BodyRecord } from '../types/index';
+export type { BodyRecord };
 
 export interface ExerciseRecord {
     id: string;

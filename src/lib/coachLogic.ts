@@ -62,7 +62,7 @@ const INSIGHT_TEMPLATES = [
 
 export const generateCoachMessage = (profile: LearningProfile, prefs: DietPreferences | null): CoachingMessage => {
     // 1. Filter relevant templates (mock simple logic)
-    let relevant = INSIGHT_TEMPLATES;
+    let relevant: any[] = INSIGHT_TEMPLATES as any;
 
     if (prefs?.goal === 'lose_weight') {
         // Boost health/habit

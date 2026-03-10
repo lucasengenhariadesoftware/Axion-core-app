@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer, RadarChartProps } from 'recharts';
+import { ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, Legend, Tooltip } from 'recharts';
 import { Download, Loader2, Play, Lock } from 'lucide-react';
 import { AxionReportTemplate } from './AxionReportTemplate';
 import { adService } from '../../services/AdService';
@@ -44,7 +44,7 @@ export const MonthlyReport = () => {
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+        } as any;
 
         try {
             await html2pdf().set(opt).from(element).save();

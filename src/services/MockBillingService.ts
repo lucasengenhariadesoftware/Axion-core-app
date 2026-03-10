@@ -33,6 +33,16 @@ export class MockBillingService implements IBillingService {
         throw new Error('Product not found');
     }
 
+    public async checkSubscriptionStatus(_productId: string): Promise<boolean> {
+        // Simulate purchase flow delay (processing...)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Mock success
+        this._isPro = true;
+        localStorage.setItem('axion_is_pro_mock', 'true'); // Assuming checking status also implies setting it if found active
+        return true;
+    }
+
     public async purchaseSubscription(productId: string): Promise<boolean> {
         // Simulate purchase flow delay (processing...)
         await new Promise(resolve => setTimeout(resolve, 2000));

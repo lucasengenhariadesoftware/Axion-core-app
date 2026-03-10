@@ -4,11 +4,26 @@ import { useLocation } from 'wouter';
 import { AdManager } from '../../services/AdManager';
 import { NAV_ITEMS } from '../../config/navigation';
 import { useUserStore } from '../../store/userStore';
+import { useState } from 'react';
+import { Device } from '@capacitor/device';
 
 export const BottomNav = () => {
     const { t } = useTranslation();
     const [location, setLocation] = useLocation();
     const { isPremium } = useUserStore();
+    const [isAndroid, setIsAndroid] = useState(false);
+
+    useEffect(() => {
+        const checkDevice = async () => {
+            try {
+                const info = await Device.getInfo();
+                setIsAndroid(info.operatingSystem === 'android');
+            } catch (e) {
+                console.error("Failed to get device info", e);
+            }
+        };
+        checkDevice();
+    }, []);
 
     useEffect(() => {
         if (isPremium) {
@@ -20,22 +35,22 @@ export const BottomNav = () => {
             AdManager.hideBanner();
         };
     }, [isPremium]);
+    const bottomOffset = AdManager.getBottomOffset(isPremium, isAndroid);
 
     return (
         <div style={{
             position: 'fixed',
-            bottom: 0,
+            bottom: bottomOffset,
             left: 0,
             right: 0,
             background: 'white',
             borderTop: '1px solid #f0f0f0',
             display: 'flex',
-            justifyContent: 'space-between', // Distribute evenly
-            padding: isPremium ? '8px 4px 4px 4px' : '8px 4px 24px 4px', /* Reduced bottom padding for Premium */
+            justifyContent: 'space-between',
+            padding: isAndroid ? '8px 4px 10px 4px' : '8px 4px 24px 4px', // Safe area logic for iOS, shorter for Android
             zIndex: 50,
             boxShadow: '0 -2px 10px rgba(0,0,0,0.02)',
-            marginBottom: isPremium ? '0' : '50px', // Adjusted for AdMob Banner
-            transition: 'margin-bottom 0.3s ease' // Smooth transition when upgrading
+            transition: 'bottom 0.3s ease' // Smooth transition when upgrading
         }}>
             {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
@@ -96,3 +111,5 @@ export const BottomNav = () => {
         </div>
     );
 };
+
+

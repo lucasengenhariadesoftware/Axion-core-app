@@ -8,7 +8,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_plate_traditional',
         name: 'Prato Feito',
         type: 'lunch', // or dinner
-        compatibleGoals: ['lose_weight', 'gain_muscle', 'health', 'maintenance'],
+        compatibleGoals: ['lose_weight', 'gain_muscle', 'health', 'maintenance'] as any,
         blocks: [
             { category: 'protein', requiredTags: ['lunch_dinner'], amount: 1 },
             { category: 'carb', exchangeGroup: 'rice_pasta', amount: 1 },
@@ -20,7 +20,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_low_carb_plate',
         name: 'Prato Leve Low Carb',
         type: 'dinner',
-        compatibleGoals: ['lose_weight', 'definition'],
+        compatibleGoals: ['lose_weight', 'definition'] as any,
         blocks: [
             { category: 'protein', requiredTags: ['lunch_dinner'], amount: 1.2 }, // Mais proteína para saciedade
             { category: 'veg', amount: 2 }, // Muito vegetal
@@ -31,7 +31,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_breakfast_fit',
         name: 'Café Fit',
         type: 'breakfast',
-        compatibleGoals: ['gain_muscle', 'health', 'maintenance'],
+        compatibleGoals: ['gain_muscle', 'health', 'maintenance'] as any,
         blocks: [
             { category: 'carb', exchangeGroup: 'bread', amount: 1 },
             { category: 'protein', exchangeGroup: 'eggs', amount: 1 },
@@ -42,7 +42,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_breakfast_quick',
         name: 'Café Rápido',
         type: 'breakfast',
-        compatibleGoals: ['lose_weight', 'performance'],
+        compatibleGoals: ['lose_weight', 'performance'] as any,
         blocks: [
             { category: 'protein', exchangeGroup: 'dairy_protein', amount: 1 },
             { category: 'carb', exchangeGroup: 'fruit_carb', amount: 1 },
@@ -53,7 +53,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_pre_workout',
         name: 'Energia Pré-Treino',
         type: 'pre_workout',
-        compatibleGoals: ['performance', 'gain_muscle'],
+        compatibleGoals: ['performance', 'gain_muscle'] as any,
         blocks: [
             { category: 'carb', requiredTags: ['quick_prep', 'pre_workout'], amount: 1 }
         ]
@@ -62,7 +62,7 @@ const MEAL_TEMPLATES: MealTemplate[] = [
         id: 't_snack_protein',
         name: 'Lanche Proteico',
         type: 'snack',
-        compatibleGoals: ['lose_weight', 'definition', 'gain_muscle'],
+        compatibleGoals: ['lose_weight', 'definition', 'gain_muscle'] as any,
         blocks: [
             { category: 'protein', exchangeGroup: 'dairy_protein', amount: 1 },
             { category: 'fat', exchangeGroup: 'nuts', amount: 0.5 }

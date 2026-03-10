@@ -1,4 +1,4 @@
-import { AdMob, AdLoadInfo, InterstitialAdPluginEvents, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
+import { AdMob, AdLoadInfo, InterstitialAdPluginEvents, RewardAdPluginEvents, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 import { Capacitor } from '@capacitor/core';
 import { useUserStore } from '../store/userStore';
 
@@ -10,6 +10,12 @@ class AdManagerService {
     private lastAdTime = 0;
     private dailyAdCount = 0;
     private isBannerVisible = false;
+    private isRewardLoaded = false;
+    private isRewardLoading = false;
+
+    // Fixed Heights
+    private readonly BANNER_HEIGHT = 50;
+    private readonly ANDROID_BOTTOM_EXTRA_SPACE = 16;
 
     // Config
     private readonly IS_native = Capacitor.isNativePlatform();
@@ -24,6 +30,10 @@ class AdManagerService {
     private readonly PROD_BANNER_ID = 'ca-app-pub-7774247906326215/9610256810';
     private readonly TEST_BANNER_ID = 'ca-app-pub-3940256099942544/6300978111';
 
+    // Reward IDs
+    private readonly PROD_REWARD_ID = 'ca-app-pub-7774247906326215/1702299443';
+    private readonly TEST_REWARD_ID = 'ca-app-pub-3940256099942544/5224354917';
+
     private readonly COOLDOWN_MS = 20 * 60 * 1000; // 20 minutes
     private readonly MAX_DAILY_ADS = 5;
 
@@ -31,6 +41,7 @@ class AdManagerService {
     private readonly KEY_LAST_AD_TIME = 'ad_last_timestamp';
     private readonly KEY_DAILY_COUNT = 'ad_daily_count';
     private readonly KEY_LAST_RESET_DATE = 'ad_last_reset_date';
+    private readonly KEY_MUSIC_UNLOCKED_UNTIL = 'music_unlocked_until';
 
     private constructor() {
         this.checkDailyReset();
@@ -74,8 +85,27 @@ class AdManagerService {
                     this.preloadInterstitial(); // Auto reload next
                 });
 
+                // Reward Listeners
+                AdMob.addListener(RewardAdPluginEvents.Loaded, (info: AdLoadInfo) => {
+                    this.isRewardLoaded = true;
+                    this.isRewardLoading = false;
+                    console.log('[AdManager] Reward Ad Loaded', info);
+                });
+
+                AdMob.addListener(RewardAdPluginEvents.FailedToLoad, (error: any) => {
+                    this.isRewardLoading = false;
+                    this.isRewardLoaded = false;
+                    console.error('[AdManager] Reward Ad Failed to Load', error);
+                });
+
+                AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
+                    this.isRewardLoaded = false;
+                    this.preloadRewardVideo();
+                });
+
                 this.initialized = true;
                 this.preloadInterstitial();
+                this.preloadRewardVideo();
             } else {
                 console.log('[AdManager] Web environment detected. Ads will be mocked.');
                 this.initialized = true;
@@ -194,7 +224,7 @@ class AdManagerService {
             await AdMob.showBanner({
                 adId: this.getBannerAdUnitId(),
                 position: BannerAdPosition.BOTTOM_CENTER,
-                adSize: BannerAdSize.ADAPTIVE_BANNER,
+                adSize: BannerAdSize.BANNER,
             });
             this.isBannerVisible = true;
         } catch (error) {
@@ -229,6 +259,137 @@ class AdManagerService {
             return this.TEST_BANNER_ID;
         }
         return this.PROD_BANNER_ID;
+    }
+
+    public getBannerHeight(): number {
+        return this.BANNER_HEIGHT;
+    }
+
+    public getBottomOffset(isPremium: boolean, isAndroid: boolean): number {
+        if (isPremium) {
+            return isAndroid ? this.ANDROID_BOTTOM_EXTRA_SPACE : 0;
+        }
+        return this.BANNER_HEIGHT + (isAndroid ? this.ANDROID_BOTTOM_EXTRA_SPACE : 0);
+    }
+
+    // --- REWARD ADS LOGIC ---
+
+    public async preloadRewardVideo() {
+        if (!this.IS_native) return;
+        if (this.isRewardLoaded || this.isRewardLoading) return;
+
+        try {
+            this.isRewardLoading = true;
+            await AdMob.prepareRewardVideoAd({
+                adId: this.getRewardAdUnitId(),
+                isTesting: import.meta.env.DEV,
+            });
+        } catch (error) {
+            this.isRewardLoading = false;
+            console.error('[AdManager] Reward Preload failed', error);
+        }
+    }
+
+    /**
+     * Tries to show a reward ad and returns true if the user earned the reward.
+     */
+    public async showRewardAd(): Promise<boolean> {
+        // Premium bypasses ads and gets reward automatically
+        if (useUserStore.getState().isPremium) {
+            return true;
+        }
+
+        // Web Mock
+        if (!this.IS_native) {
+            return new Promise(resolve => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = `
+                    position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999;
+                    display: flex; flex-direction: column; align-items: center; justify-content: center;
+                    color: white; font-family: system-ui;
+                `;
+                overlay.innerHTML = `
+                    <h1>AdMob Reward (Mock)</h1>
+                    <p>Assista para liberar a função.</p>
+                    <div style="display:flex; gap: 10px; margin-top: 20px;">
+                        <button id="btn-mock-reward" style="padding: 12px 24px; background: #10B981; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            Simular Recompensa Ganha (Watch Full)
+                        </button>
+                        <button id="btn-mock-close" style="padding: 12px 24px; background: #EF4444; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            Fechar (No Reward)
+                        </button>
+                    </div>
+                `;
+
+                overlay.querySelector('#btn-mock-reward')?.addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(true);
+                });
+
+                overlay.querySelector('#btn-mock-close')?.addEventListener('click', () => {
+                    document.body.removeChild(overlay);
+                    resolve(false);
+                });
+
+                document.body.appendChild(overlay);
+            });
+        }
+
+        if (!this.isRewardLoaded) {
+            console.log('[AdManager] Reward ad not loaded. Loading now...');
+            await this.preloadRewardVideo();
+            // In a robust app, we should show a loading spinner while waiting.
+            // For simplicity here, if it fails to load immediately, we return false.
+            if (!this.isRewardLoaded) return false;
+        }
+
+        return new Promise(async (resolve) => {
+            let rewardEarned = false;
+
+            const rewardListener = await AdMob.addListener(RewardAdPluginEvents.Rewarded, (reward) => {
+                console.log('[AdManager] Reward granted!', reward);
+                rewardEarned = true;
+            });
+
+            const dismissListener = await AdMob.addListener(RewardAdPluginEvents.Dismissed, () => {
+                resolve(rewardEarned);
+
+                // Cleanup listeners specific to this show call to avoid duplicates
+                rewardListener.remove();
+                dismissListener.remove();
+            });
+
+            try {
+                await AdMob.showRewardVideoAd();
+            } catch (error) {
+                console.error('[AdManager] Failed to show reward ad', error);
+                rewardListener.remove();
+                dismissListener.remove();
+                resolve(false);
+            }
+        });
+    }
+
+    private getRewardAdUnitId(): string {
+        if (import.meta.env.DEV) {
+            return this.TEST_REWARD_ID;
+        }
+        return this.PROD_REWARD_ID;
+    }
+
+    // --- MUSIC FEATURE STATE ---
+
+    public isMusicFeatureUnlocked(): boolean {
+        if (useUserStore.getState().isPremium) {
+            return true;
+        }
+        const unlockedUntil = parseInt(localStorage.getItem(this.KEY_MUSIC_UNLOCKED_UNTIL) || '0', 10);
+        return Date.now() < unlockedUntil;
+    }
+
+    public unlockMusicFeatureFor24Hours() {
+        const tomorrow = Date.now() + (24 * 60 * 60 * 1000);
+        localStorage.setItem(this.KEY_MUSIC_UNLOCKED_UNTIL, tomorrow.toString());
     }
 
     // --- WEB MOCK UTILS ---
@@ -318,3 +479,6 @@ class AdManagerService {
 }
 
 export const AdManager = AdManagerService.getInstance();
+
+
+

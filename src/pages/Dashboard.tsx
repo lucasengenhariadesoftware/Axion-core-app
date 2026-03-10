@@ -22,7 +22,7 @@ export default function Dashboard() {
         if (!plan) return;
         setPlan({
             ...plan,
-            meals: plan.meals.map(m => m.id === id ? { ...m, completed: !m.completed } : m)
+            meals: plan.meals.map(m => m.id === id ? { ...m, completed: !(m as any).completed } : m)
         });
     };
 
@@ -35,12 +35,12 @@ export default function Dashboard() {
     };
 
     const addWater = (amount: number) => {
-        setWaterIntake(prev => Math.min(prev + amount, plan.waterTarget + 1000));
+        setWaterIntake(prev => Math.min(prev + amount, (plan as any).waterTarget + 1000));
     };
 
-    const completedMeals = plan.meals.filter(m => m.completed).length;
+    const completedMeals = plan.meals.filter(m => (m as any).completed).length;
     const totalMeals = plan.meals.length;
-    const progress = Math.round(((completedMeals + (plan.workout?.completed ? 1 : 0)) / (totalMeals + 1)) * 100);
+    const progress = Math.round(((completedMeals + ((plan.workout as any)?.completed ? 1 : 0)) / (totalMeals + 1)) * 100);
 
     return (
         <div className="container" style={{ paddingBottom: '80px' }}>
@@ -102,27 +102,27 @@ export default function Dashboard() {
                             alignItems: 'center',
                             gap: 'var(--space-4)',
                             cursor: 'pointer',
-                            border: plan.workout.completed ? '1px solid var(--color-success)' : '1px solid transparent',
+                            border: (plan.workout as any).completed ? '1px solid var(--color-success)' : '1px solid transparent',
                             transition: 'var(--transition-fast)'
                         }}
                     >
                         <div style={{
-                            background: plan.workout.completed ? 'var(--color-success)' : 'var(--color-surface)',
+                            background: (plan.workout as any).completed ? 'var(--color-success)' : 'var(--color-surface)',
                             padding: '10px',
                             borderRadius: 'var(--radius-full)',
-                            color: plan.workout.completed ? 'white' : 'var(--color-primary)'
+                            color: (plan.workout as any).completed ? 'white' : 'var(--color-primary)'
                         }}>
                             <Dumbbell size={20} />
                         </div>
                         <div style={{ flex: 1 }}>
-                            <h3 style={{ fontWeight: 600, textDecoration: plan.workout.completed ? 'line-through' : 'none' }}>
-                                {plan.workout.title}
+                            <h3 style={{ fontWeight: 600, textDecoration: (plan.workout as any).completed ? 'line-through' : 'none' }}>
+                                {(plan.workout as any).title}
                             </h3>
                             <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)' }}>
-                                {plan.workout.duration} min • {plan.workout.exercisesCount} exercícios
+                                {(plan.workout as any).duration} min • {(plan.workout as any).exercisesCount || 0} exercícios
                             </p>
                         </div>
-                        {plan.workout.completed ?
+                        {(plan.workout as any).completed ?
                             <CheckCircle2 color="var(--color-success)" fill="var(--color-success)" fillOpacity={0.2} /> :
                             <Circle color="#ddd" />
                         }
@@ -140,14 +140,14 @@ export default function Dashboard() {
                             alignItems: 'center',
                             gap: 'var(--space-4)',
                             cursor: 'pointer',
-                            opacity: meal.completed ? 0.6 : 1
+                            opacity: (meal as any).completed ? 0.6 : 1
                         }}
                     >
                         <div style={{
-                            background: meal.completed ? 'var(--color-success)' : 'var(--color-surface)',
+                            background: (meal as any).completed ? 'var(--color-success)' : 'var(--color-surface)',
                             padding: '10px',
                             borderRadius: 'var(--radius-full)',
-                            color: meal.completed ? 'white' : 'var(--color-accent-dark)'
+                            color: (meal as any).completed ? 'white' : 'var(--color-accent-dark)'
                         }}>
                             <Utensils size={20} />
                         </div>
@@ -160,14 +160,14 @@ export default function Dashboard() {
                                     ~{meal.calories} kcal
                                 </p>
                             </div>
-                            <h3 style={{ fontWeight: 600, fontSize: 'var(--text-sm)', textDecoration: meal.completed ? 'line-through' : 'none' }}>
-                                {meal.title}
+                            <h3 style={{ fontWeight: 600, fontSize: 'var(--text-sm)', textDecoration: (meal as any).completed ? 'line-through' : 'none' }}>
+                                {(meal as any).title}
                             </h3>
                             <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)', marginTop: '2px' }}>
                                 {meal.description}
                             </p>
                         </div>
-                        {meal.completed ?
+                        {(meal as any).completed ?
                             <CheckCircle2 color="var(--color-success)" fill="var(--color-success)" fillOpacity={0.2} /> :
                             <Circle color="#ddd" />
                         }
@@ -184,7 +184,7 @@ export default function Dashboard() {
                             <h3 style={{ fontWeight: 600 }}>Hidratação</h3>
                         </div>
                         <span style={{ fontWeight: 700, fontSize: 'var(--text-lg)' }}>
-                            {waterIntake} <span style={{ fontSize: 'var(--text-sm)', opacity: 0.7 }}>/ {plan.waterTarget}ml</span>
+                            {waterIntake} <span style={{ fontSize: 'var(--text-sm)', opacity: 0.7 }}>/ {(plan as any).waterTarget || 2500}ml</span>
                         </span>
                     </div>
 

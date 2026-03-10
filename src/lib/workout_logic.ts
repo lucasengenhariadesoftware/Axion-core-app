@@ -1019,7 +1019,7 @@ export const generateWeeklyPlan = (profile: UserProfile): WeeklyPlan => {
         sessions = generateFatLossPlan(level, profile.gender);
         planName = goal === 'definition' ? 'Definição & Tônus' : 'Queima Inteligente';
 
-    } else if (goal === 'hypertrophy' || goal === 'gain_muscle') {
+    } else if ((profile.goal as any) === 'hypertrophy' || (profile.goal as string) === 'gain_muscle') {
         sessions = generateMusclePlan(level, profile.gender, profile);
         planName = 'Hipertrofia Avançada';
 

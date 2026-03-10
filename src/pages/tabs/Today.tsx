@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUserStore } from '../../store/userStore';
 import { generateDailyPlan } from '../../lib/planner';
-import { CheckCircle2, Flame, Briefcase, GraduationCap, Calendar, Dumbbell, Bell } from 'lucide-react';
+import { CheckCircle2, Flame, Briefcase, GraduationCap, Calendar, Dumbbell, Bell, Music } from 'lucide-react';
 import CaloriesCard from '../../components/today/CaloriesCard';
 import HydrationCard from '../../components/today/HydrationCard';
 import RoutineSetupCard from '../../components/today/RoutineSetupCard';
 import DailyGoalsCard from '../../components/today/DailyGoalsCard';
 import { InsightsPanel } from '../../components/coach/InsightsPanel';
 import { MonthlyReport } from '../../components/coach/MonthlyReport';
+import { SideMenu } from '../../components/layout/SideMenu';
 
 export default function TodayTab() {
     const { t } = useTranslation();
@@ -18,6 +19,8 @@ export default function TodayTab() {
         dailyPlan,
         checkDailyReset
     } = useUserStore();
+
+    const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
 
     useEffect(() => {
         if (profile) {
@@ -47,18 +50,29 @@ export default function TodayTab() {
                             {new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}
                         </p>
                     </div>
-                    <div style={{
-                        background: 'var(--color-surface-alt)',
-                        padding: '8px 12px',
-                        borderRadius: '99px',
-                        display: 'flex', alignItems: 'center', gap: '6px',
-                        boxShadow: '0 2px 5px rgba(0,0,0,0.05)'
-                    }}>
-                        <Flame size={16} fill="orange" color="orange" />
-                        <span style={{ fontWeight: 600, fontSize: '14px' }}>3 Dias</span>
+                    <div
+                        onClick={() => setIsSideMenuOpen(!isSideMenuOpen)}
+                        style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '12px',
+                            background: isSideMenuOpen ? '#374151' : 'white',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                            cursor: 'pointer',
+                            border: '1px solid #F3F4F6',
+                            transition: 'all 0.2s',
+                            zIndex: 10001,
+                            position: 'relative'
+                        }}>
+                        <Music size={20} color={isSideMenuOpen ? 'white' : '#374151'} />
                     </div>
                 </div>
             </header>
+
+            <SideMenu isOpen={isSideMenuOpen} onClose={() => setIsSideMenuOpen(false)} />
 
             {/* Progress */}
             <DailyGoalsCard />

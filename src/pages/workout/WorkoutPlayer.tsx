@@ -22,8 +22,9 @@ export default function WorkoutPlayer() {
     const [imageError, setImageError] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
-        if (weeklyPlan && params?.sessionId) {
-            const foundSession = weeklyPlan.sessions.find(s => s.id === params.sessionId);
+        const sessionId = params ? (params as any).sessionId : null;
+        if (weeklyPlan && sessionId) {
+            const foundSession = weeklyPlan.sessions.find(s => s.id === sessionId);
             if (foundSession) {
                 setSession(foundSession);
             } else {
