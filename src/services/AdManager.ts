@@ -14,8 +14,8 @@ class AdManagerService {
     private isRewardLoading = false;
 
     // Fixed Heights
-    private readonly BANNER_HEIGHT = 50;
-    private readonly ANDROID_BOTTOM_EXTRA_SPACE = 16;
+    private readonly BANNER_HEIGHT = 70; // Aumentado para dar espaço extra para os textos da BottomNav
+    private readonly ANDROID_BOTTOM_EXTRA_SPACE = 20; // Ajuste adicional seguro
 
     // Config
     private readonly IS_native = Capacitor.isNativePlatform();
@@ -224,7 +224,8 @@ class AdManagerService {
             await AdMob.showBanner({
                 adId: this.getBannerAdUnitId(),
                 position: BannerAdPosition.BOTTOM_CENTER,
-                adSize: BannerAdSize.BANNER,
+                adSize: BannerAdSize.FULL_BANNER,
+                margin: 0,
             });
             this.isBannerVisible = true;
         } catch (error) {
