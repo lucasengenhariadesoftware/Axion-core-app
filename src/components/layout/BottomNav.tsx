@@ -119,7 +119,8 @@ export const BottomNav = () => {
                     left: 0,
                     right: 0,
                     height: AdManager.getBannerHeight(),
-                    backgroundColor: '#000000', // Black matching system navigation bar
+                    backgroundColor: 'white', // Matching BottomNav background
+                    borderTop: '1px solid #f0f0f0',
                     zIndex: 49,
                     display: 'flex',
                     alignItems: 'center',
