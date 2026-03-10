@@ -12,10 +12,12 @@ class AdManagerService {
     private isBannerVisible = false;
     private isRewardLoaded = false;
     private isRewardLoading = false;
+    private bannerIntervalId: any = null;
 
-    // Fixed Heights
+    // Fixed Heights & Timers
     private readonly BANNER_HEIGHT = 70; // Aumentado para dar espaço extra para os textos da BottomNav
     private readonly ANDROID_BOTTOM_EXTRA_SPACE = 20; // Ajuste adicional seguro
+    private readonly BANNER_REFRESH_MS = 45000; // 45 seconds
 
     // Config
     private readonly IS_native = Capacitor.isNativePlatform();
@@ -228,6 +230,7 @@ class AdManagerService {
                 margin: 0,
             });
             this.isBannerVisible = true;
+            this.startBannerRefresh();
         } catch (error) {
             console.error('[AdManager] Failed to show banner', error);
         }
@@ -247,11 +250,42 @@ class AdManagerService {
 
         try {
             await AdMob.hideBanner();
-            // Or removeBanner() if we want to destroy it completely
-            // await AdMob.removeBanner(); 
             this.isBannerVisible = false;
+            this.stopBannerRefresh();
         } catch (error) {
             console.error('[AdManager] Failed to hide banner', error);
+        }
+    }
+
+    private startBannerRefresh() {
+        if (!this.IS_native) return;
+        this.stopBannerRefresh();
+
+        this.bannerIntervalId = setInterval(async () => {
+            if (this.isBannerVisible && !useUserStore.getState().isPremium) {
+                console.log('[AdManager] Refreshing Banner (45s loop)...');
+                try {
+                    await AdMob.hideBanner();
+                    // Slight delay to ensure it's removed before showing again
+                    setTimeout(async () => {
+                        await AdMob.showBanner({
+                            adId: this.getBannerAdUnitId(),
+                            position: BannerAdPosition.BOTTOM_CENTER,
+                            adSize: BannerAdSize.FULL_BANNER,
+                            margin: 0,
+                        });
+                    }, 500);
+                } catch (e) {
+                    console.error('[AdManager] Error refreshing banner', e);
+                }
+            }
+        }, this.BANNER_REFRESH_MS);
+    }
+
+    private stopBannerRefresh() {
+        if (this.bannerIntervalId) {
+            clearInterval(this.bannerIntervalId);
+            this.bannerIntervalId = null;
         }
     }
 
