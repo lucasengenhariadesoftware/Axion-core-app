@@ -61,9 +61,9 @@ export const BottomNav = () => {
                     return (
                         <button
                             key={item.id}
-                            onClick={async () => {
-                                await AdManager.showInterstitial();
+                            onClick={() => {
                                 setLocation(item.path);
+                                AdManager.showInterstitial().catch(console.error);
                             }}
                             style={{
                                 display: 'flex',
@@ -115,19 +115,19 @@ export const BottomNav = () => {
             {!isPremium && (
                 <div style={{
                     position: 'fixed',
-                    bottom: 0,
+                    bottom: 0, // Fill all the way down
                     left: 0,
                     right: 0,
-                    height: AdManager.getBannerHeight(),
+                    height: bottomOffset, // Make it cover the entire offset space under the real bottom nav
                     backgroundColor: 'white', // Matching BottomNav background
-                    borderTop: '1px solid #f0f0f0',
                     zIndex: 49,
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start', // Align to start so text stays closer to the ad area
                     justifyContent: 'center',
                     color: '#666',
                     fontSize: '12px',
-                    fontWeight: 500
+                    fontWeight: 500,
+                    paddingTop: '25px', // Push text down a bit into the ad area
                 }}>
                     <span style={{ opacity: 0.5 }}>Carregando Anúncio...</span>
                 </div>

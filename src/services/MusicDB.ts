@@ -1,6 +1,6 @@
 const DB_NAME = 'fitness_app_music_db';
 const STORE_NAME = 'tracks_store';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Incremented to clear old 'File' object data
 
 export interface PersistedTrack {
     id: number;
@@ -8,7 +8,8 @@ export interface PersistedTrack {
     artist: string;
     duration: string;
     color: string;
-    file: File;
+    fileData: ArrayBuffer;
+    fileType: string;
 }
 
 const initDB = (): Promise<IDBDatabase> => {

@@ -3,6 +3,7 @@ import { RefreshCw, CheckCircle2, Circle, Zap, Wallet, Timer } from 'lucide-reac
 import { Meal } from '../../types/diet';
 import { getSmartSubstitutions } from '../../lib/dietLogic';
 import { useUserStore } from '../../store/userStore';
+import { AdManager } from '../../services/AdManager';
 
 interface MealCardProps {
     meal: Meal;
@@ -27,7 +28,16 @@ export default function MealCard({ meal }: MealCardProps) {
             {/* Header */}
             <div
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', cursor: 'pointer' }}
-                onClick={() => toggleMeal(meal.id)}
+                onClick={() => {
+                    const willBeDone = !meal.done;
+                    toggleMeal(meal.id);
+                    if (willBeDone) {
+                        const state = useUserStore.getState();
+                        if (state.dailyPlan && state.dailyPlan.meals.every(m => m.done)) {
+                            // AdManager.showInterstitial(true, 'diet');
+                        }
+                    }
+                }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{

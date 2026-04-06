@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { useUserStore } from '../store/userStore';
-import { playAlarmSound } from '../lib/sound';
+import { playAlarmSound, stopAlarmSound } from '../lib/sound';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export function useRoutineAlarm() {
     const { dailyPlan } = useUserStore();
@@ -19,7 +20,8 @@ export function useRoutineAlarm() {
 
             dailyPlan.routineItems.forEach(item => {
                 if (item.alarmEnabled && item.startTime === currentTime && !item.completed) {
-                    const alarmKey = `${item.id}-${currentTime}`;
+                    const todayStr = now.toDateString();
+                    const alarmKey = `${item.id}-${todayStr}-${currentTime}`;
 
                     if (!triggeredAlarms.has(alarmKey)) {
                         // Trigger Alarm
@@ -33,11 +35,33 @@ export function useRoutineAlarm() {
 
         const interval = setInterval(checkAlarms, 1000 * 10); // Check every 10 seconds
 
-        return () => clearInterval(interval);
+        // Listen for local notification interactions
+        const notificationListener = LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction) => {
+            const extra = notificationAction.notification.extra;
+            if (extra && extra.title && extra.time) {
+                if (notificationAction.actionId === 'dismiss') {
+                    // Just clear it and stop sound if playing
+                    setActiveAlarm(null);
+                    stopAlarmSound();
+                } else {
+                    // Normal click, show alarm modal
+                    setActiveAlarm({ title: extra.title, time: extra.time });
+                    playAlarmSound();
+                }
+            }
+        });
+
+        return () => {
+            clearInterval(interval);
+            notificationListener.then(l => l.remove());
+        };
     }, [dailyPlan, triggeredAlarms]);
 
     return {
         activeAlarm,
-        dismissAlarm: () => setActiveAlarm(null)
+        dismissAlarm: () => {
+            setActiveAlarm(null);
+            stopAlarmSound();
+        }
     };
 }

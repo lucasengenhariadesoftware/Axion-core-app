@@ -4,6 +4,7 @@ import { useUserStore } from './store/userStore';
 import { AdManager } from './services/AdManager';
 import Onboarding from './pages/Onboarding';
 import { AppLayout } from './components/layout/AppLayout';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { useRoutineAlarm } from './hooks/useRoutineAlarm';
 import AlarmModal from './components/ui/AlarmModal';
 
@@ -24,6 +25,31 @@ function App() {
 
     useEffect(() => {
         AdManager.initialize();
+
+        // Request permissions and create channel for local notifications
+        LocalNotifications.requestPermissions().then((result) => {
+            if (result.display === 'granted') {
+                LocalNotifications.createChannel({
+                    id: 'routine-alarms',
+                    name: 'Alarmes de Rotina',
+                    description: 'Notificações de alta prioridade para suas atividades',
+                    importance: 5,
+                    visibility: 1, // Public
+                    vibration: true
+                }).catch(console.error);
+
+                LocalNotifications.registerActionTypes({
+                    types: [
+                        {
+                            id: 'ALARM_ACTIONS',
+                            actions: [
+                                { id: 'dismiss', title: 'Estou ciente' }
+                            ]
+                        }
+                    ]
+                }).catch(console.error);
+            }
+        });
 
         const onboarded = isOnboarded();
 

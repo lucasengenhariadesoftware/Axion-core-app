@@ -181,8 +181,16 @@ export const useUserStore = create<UserStateWithHistory>()(
 
                     // It's a new day! Reset progress but keep profile
                     console.log("New day detected! Resetting plan.");
+
+                    // Transfer routine items to the new plan, but reset their 'completed' status
+                    const previousRoutineItems = get().dailyPlan?.routineItems || [];
+                    const resetRoutineItems = previousRoutineItems.map(item => ({ ...item, completed: false }));
+
                     set({
-                        dailyPlan: newPlan,
+                        dailyPlan: {
+                            ...newPlan,
+                            routineItems: resetRoutineItems
+                        },
                         waterIntake: 0,
                         lastPlanDate: todayDate
                     });

@@ -10,6 +10,7 @@ import DailyGoalsCard from '../../components/today/DailyGoalsCard';
 import { InsightsPanel } from '../../components/coach/InsightsPanel';
 import { MonthlyReport } from '../../components/coach/MonthlyReport';
 import { SideMenu } from '../../components/layout/SideMenu';
+import { NotesAccordion } from '../../components/today/NotesAccordion';
 
 export default function TodayTab() {
     const { t } = useTranslation();
@@ -175,6 +176,11 @@ export default function TodayTab() {
 
 
             </section>
+
+            {/* Notes Accordion */}
+            <div style={{ marginBottom: '32px' }}>
+                <NotesAccordion />
+            </div>
 
             {/* Nutrition Charts */}
             <CaloriesCard />

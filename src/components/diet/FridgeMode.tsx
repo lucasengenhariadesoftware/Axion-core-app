@@ -33,7 +33,7 @@ export default function FridgeMode({ onClose }: { onClose: () => void }) {
                 width: '100%',
                 borderTopLeftRadius: '24px',
                 borderTopRightRadius: '24px',
-                padding: '24px',
+                padding: '24px 24px 90px 24px',
                 maxHeight: '90vh',
                 overflowY: 'auto'
             }}>

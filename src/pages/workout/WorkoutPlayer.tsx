@@ -20,6 +20,15 @@ export default function WorkoutPlayer() {
     const [isResting, setIsResting] = useState(false);
     const [timer, setTimer] = useState(0);
     const [imageError, setImageError] = useState<Record<string, boolean>>({});
+    const [workoutTime, setWorkoutTime] = useState(0);
+
+    const formatTime = (seconds: number) => {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        if (h > 0) return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
 
     useEffect(() => {
         const sessionId = params ? (params as any).sessionId : null;
@@ -48,6 +57,15 @@ export default function WorkoutPlayer() {
         return () => clearInterval(interval);
     }, [isResting, timer]);
 
+    // Global workout timer
+    useEffect(() => {
+        let interval: any;
+        if (mode === 'active') {
+            interval = setInterval(() => setWorkoutTime(t => t + 1), 1000);
+        }
+        return () => clearInterval(interval);
+    }, [mode]);
+
     if (!session) return <div className="container">Carregando treino...</div>;
 
     const currentExercise = session.exercises[activeExerciseIndex];
@@ -70,10 +88,10 @@ export default function WorkoutPlayer() {
             // Mark as completed in Store/AI Context
             toggleWorkout();
 
-            AdManager.showInterstitial().then(() => {
+            // AdManager.showInterstitial(true).then(() => {
                 alert("Treino Concluído! Parabéns!");
                 setLocation('/app/workout');
-            });
+            // });
         }
     };
 
@@ -130,28 +148,53 @@ export default function WorkoutPlayer() {
         );
     }
 
-    // --- ACTIVE PLAYER MODE ---
     return (
-        <div style={{ position: 'fixed', inset: 0, background: 'white', zIndex: 50, display: 'flex', flexDirection: 'column' }}>
-            <header style={{ padding: '16px', display: 'flex', alignItems: 'center', borderBottom: '1px solid #f0f0f0' }}>
-                <Button variant="ghost" onClick={() => setMode('overview')} style={{ padding: '8px' }}>
-                    <ChevronLeft />
+        <div style={{ position: 'fixed', inset: 0, background: 'linear-gradient(180deg, var(--color-surface) 0%, #F8FAFC 100%)', zIndex: 50, display: 'flex', flexDirection: 'column' }}>
+            <header style={{ 
+                padding: '20px 16px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                background: 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(12px)',
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+                position: 'relative',
+                zIndex: 10
+            }}>
+                <Button variant="ghost" onClick={() => setMode('overview')} style={{ padding: '8px', background: 'var(--color-surface-alt)', borderRadius: '50%', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+                    <ChevronLeft size={20} />
                 </Button>
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                    <h1 style={{ fontSize: '16px', fontWeight: 600 }}>{session.title}</h1>
-                    <p style={{ fontSize: '10px', color: '#666' }}>
+                    <h1 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '-0.3px' }}>{session.title}</h1>
+                    <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontWeight: 500, marginTop: '2px' }}>
                         Exercício {activeExerciseIndex + 1} de {session.exercises.length}
                     </p>
                 </div>
-                <div style={{ width: '40px' }} />
+                <div style={{ width: 'auto', minWidth: '40px', display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--color-primary)' }}>
+                    <Clock size={16} />
+                    <span style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'monospace' }}>
+                        {formatTime(workoutTime)}
+                    </span>
+                </div>
             </header>
 
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px' }}>
-                <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-                    <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '8px' }}>{currentExercise.exerciseName}</h2>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', paddingBottom: '40px' }}>
+                <div style={{ marginBottom: '32px', textAlign: 'center' }}>
+                    <h2 style={{ fontSize: '28px', fontWeight: 800, marginBottom: '20px', color: 'var(--color-primary)', letterSpacing: '-0.5px' }}>{currentExercise.exerciseName}</h2>
                     {/* GIF Section */}
                     {libraryData?.gifUrl && !imageError[currentExercise.exerciseId] ? (
-                        <div style={{ width: '100%', height: 'auto', maxHeight: '300px', overflow: 'hidden', borderRadius: '12px', marginBottom: '16px', display: 'flex', justifyContent: 'center', background: '#f0f0f0' }}>
+                        <div style={{ 
+                            width: '100%', 
+                            height: 'auto', 
+                            maxHeight: '320px', 
+                            overflow: 'hidden', 
+                            borderRadius: '24px', 
+                            marginBottom: '24px', 
+                            display: 'flex', 
+                            justifyContent: 'center', 
+                            background: '#f8fafc',
+                            boxShadow: 'var(--shadow-md)',
+                            border: '1px solid rgba(0,0,0,0.03)'
+                        }}>
                             <img
                                 src={libraryData.gifUrl}
                                 alt={currentExercise.exerciseName}
@@ -275,37 +318,92 @@ export default function WorkoutPlayer() {
                     )}
                 </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     {currentExercise.sets.map((set, idx) => (
-                        <Card key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                                <span style={{ fontSize: '14px', fontWeight: 600, color: '#999' }}>Set {idx + 1}</span>
-                                <div style={{ display: 'flex', gap: '12px' }}>
-                                    <span style={{ fontWeight: 600 }}>{set.reps} reps</span>
-                                    {set.weight && <span style={{ color: '#666' }}>{set.weight}kg</span>}
+                        <Card key={idx} style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'space-between', 
+                            padding: '16px 20px',
+                            background: 'var(--color-surface-alt)',
+                            border: '1px solid rgba(0,0,0,0.03)',
+                            borderRadius: '16px',
+                            boxShadow: 'var(--shadow-sm)'
+                        }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Set {idx + 1}</span>
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                                    <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-primary)' }}>{set.reps}</span>
+                                    <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>reps</span>
+                                    {set.weight && <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-secondary)', marginLeft: '8px' }}>• {set.weight}kg</span>}
                                 </div>
                             </div>
-                            <Button size="sm" onClick={() => handleSetComplete(idx)}>
-                                <CheckCircle2 size={20} />
+                            <Button size="sm" onClick={() => handleSetComplete(idx)} style={{ 
+                                background: 'white',
+                                color: 'var(--color-accent)', 
+                                border: '2px solid var(--color-accent)',
+                                borderRadius: '50%',
+                                width: '40px',
+                                height: '40px',
+                                padding: '0',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease'
+                            }}>
+                                <CheckCircle2 size={24} />
                             </Button>
                         </Card>
                     ))}
                 </div>
             </div>
 
-            <div style={{ padding: '20px', borderTop: '1px solid #f0f0f0', background: 'white' }}>
+            <div style={{ 
+                padding: '16px 20px 100px 20px', 
+                background: 'rgba(248, 250, 252, 0.7)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.6)',
+                boxShadow: '0 -4px 24px rgba(0,0,0,0.03)',
+                zIndex: 20
+            }}>
                 {isResting ? (
-                    <div style={{ height: '60px', background: 'var(--color-primary)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', color: 'white' }}>
-                        <span style={{ fontWeight: 600 }}>Descanso</span>
-                        <span style={{ fontSize: '24px', fontWeight: 700, fontFamily: 'monospace' }}>
+                    <div style={{ 
+                        height: '56px', 
+                        background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)', 
+                        borderRadius: '16px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'space-between', 
+                        padding: '0 20px', 
+                        color: 'white',
+                        boxShadow: '0 8px 20px rgba(15, 23, 42, 0.15)'
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Clock size={18} className="animate-pulse" />
+                            <span style={{ fontWeight: 600, fontSize: '14px' }}>Descanso</span>
+                        </div>
+                        <span style={{ fontSize: '24px', fontWeight: 800, fontFamily: 'monospace', letterSpacing: '1px' }}>
                             00:{timer < 10 ? `0${timer}` : timer}
                         </span>
-                        <Button size="sm" variant="ghost" onClick={() => setIsResting(false)} style={{ color: 'white' }}>
-                            Pular <SkipForward size={16} />
+                        <Button size="sm" variant="ghost" onClick={() => setIsResting(false)} style={{ color: 'white', background: 'rgba(255,255,255,0.1)', borderRadius: '10px', height: '36px', padding: '0 12px' }}>
+                            Pular <SkipForward size={14} style={{ marginLeft: '4px' }} />
                         </Button>
                     </div>
                 ) : (
-                    <Button fullWidth onClick={nextExercise}>
+                    <Button fullWidth onClick={nextExercise} style={{ 
+                        height: '54px', 
+                        fontSize: '16px', 
+                        fontWeight: 700,
+                        borderRadius: '16px',
+                        background: 'linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%)',
+                        color: 'white',
+                        boxShadow: '0 6px 16px rgba(16, 185, 129, 0.25), inset 0 1px 0 rgba(255,255,255,0.2)',
+                        border: '1px solid rgba(0,0,0,0.05)',
+                        letterSpacing: '0.5px',
+                        textTransform: 'uppercase',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)'
+                    }}>
                         {activeExerciseIndex < session.exercises.length - 1 ? 'Próximo Exercício' : 'Finalizar Treino'}
                     </Button>
                 )}

@@ -1,0 +1,230 @@
+commit 69b34e9f93b2b738270922abd23d9dc4adc1d951
+Author: Lucas e Silva <lucase.silvasoares1@gmail.com>
+Date:   Tue Mar 10 04:28:10 2026 -0300
+
+    feat(ads): implement 45s auto-refresh interval for AdMob Banner
+
+M	src/services/AdManager.ts
+
+commit f6276a7ac17b4b49f5c823fe4c9a94b98c10e8d6
+Author: Lucas e Silva <lucase.silvasoares1@gmail.com>
+Date:   Tue Mar 10 04:15:34 2026 -0300
+
+    style(ads): change placeholder banner background to white matching BottomNav
+
+M	src/components/layout/BottomNav.tsx
+
+commit dbe0e9e606b9a4fe187f5ce73fb698870e3f2269
+Author: Lucas e Silva <lucase.silvasoares1@gmail.com>
+Date:   Tue Mar 10 04:11:44 2026 -0300
+
+    style(ads): change placeholder banner background to black matching System Navigation Bar
+
+M	src/components/layout/BottomNav.tsx
+M	src/services/AdManager.ts
+
+commit b65d0fee12fd8d02d702a379c6565ccfe8e7ab5c
+Author: Lucas e Silva <lucase.silvasoares1@gmail.com>
+Date:   Tue Mar 10 03:32:11 2026 -0300
+
+    feat(ads): implement Reward Ads and fix BottomNav AdMob Banner overlapping
+
+A	android/.gitignore
+A	android/app/.gitignore
+A	android/app/build.gradle
+A	android/app/capacitor.build.gradle
+A	android/app/proguard-rules.pro
+A	android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java
+A	android/app/src/main/AndroidManifest.xml
+A	android/app/src/main/java/com/axioncore/app/MainActivity.java
+A	android/app/src/main/res/drawable-land-hdpi/splash.png
+A	android/app/src/main/res/drawable-land-mdpi/splash.png
+A	android/app/src/main/res/drawable-land-xhdpi/splash.png
+A	android/app/src/main/res/drawable-land-xxhdpi/splash.png
+A	android/app/src/main/res/drawable-land-xxxhdpi/splash.png
+A	android/app/src/main/res/drawable-port-hdpi/splash.png
+A	android/app/src/main/res/drawable-port-mdpi/splash.png
+A	android/app/src/main/res/drawable-port-xhdpi/splash.png
+A	android/app/src/main/res/drawable-port-xxhdpi/splash.png
+A	android/app/src/main/res/drawable-port-xxxhdpi/splash.png
+A	android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml
+A	android/app/src/main/res/drawable/ic_launcher_background.xml
+A	android/app/src/main/res/drawable/splash.png
+A	android/app/src/main/res/layout/activity_main.xml
+A	android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+A	android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+A	android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+A	android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png
+A	android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+A	android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+A	android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png
+A	android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+A	android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+A	android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png
+A	android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+A	android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+A	android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png
+A	android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+A	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+A	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png
+A	android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+A	android/app/src/main/res/values/ic_launcher_background.xml
+A	android/app/src/main/res/values/strings.xml
+A	android/app/src/main/res/values/styles.xml
+A	android/app/src/main/res/xml/file_paths.xml
+A	android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java
+A	android/build.gradle
+A	android/capacitor.settings.gradle
+A	android/gradle.properties
+A	android/gradle/wrapper/gradle-wrapper.jar
+A	android/gradle/wrapper/gradle-wrapper.properties
+A	android/gradlew
+A	android/gradlew.bat
+A	android/settings.gradle
+A	android/variables.gradle
+M	dev-dist/sw.js
+M	package-lock.json
+M	package.json
+M	src/components/coach/MonthlyReport.tsx
+M	src/components/layout/AppLayout.tsx
+M	src/components/layout/BottomNav.tsx
+A	src/components/layout/SideMenu.tsx
+A	src/components/music/MusicPlayer.tsx
+M	src/lib/coachLogic.ts
+M	src/lib/mealBuilder.ts
+M	src/lib/planner.ts
+R100	src/lib/runLogic.test.ts	src/lib/runLogic.test.ts.skip
+M	src/lib/workout_logic.ts
+M	src/pages/Dashboard.tsx
+M	src/pages/settings/PrivacyPolicy.tsx
+M	src/pages/tabs/Today.tsx
+M	src/pages/workout/WorkoutPlayer.tsx
+M	src/services/AdManager.ts
+M	src/services/AdService.ts
+M	src/services/MockBillingService.ts
+A	src/services/MusicDB.ts
+M	src/store/evolutionStore.ts
+M	src/types/diet.ts
+M	tsconfig.json
+
+commit 17db9b46047a4d3d60aa643583bc04a33013ec9d
+Author: Lucas e Silva <lucase.silvasoares1@gmail.com>
+Date:   Mon Feb 9 13:22:16 2026 -0300
+
+    Save all current changes: Subscription text and ad banner fix
+
+A	.gitignore
+A	capacitor.config.ts
+A	dev-dist/registerSW.js
+A	dev-dist/sw.js
+A	dev-dist/workbox-5a5d9309.js
+A	find_images.cjs
+A	index.html
+A	package-lock.json
+A	package.json
+A	public/assets/anatomy_demo.png
+A	public/pwa-192x192.png
+A	public/pwa-512x512.png
+A	public/pwa-icon.svg
+A	src/App.tsx
+A	src/components/ads/AdUnlockModal.tsx
+A	src/components/coach/AxionReportTemplate.tsx
+A	src/components/coach/ChatInterface.tsx
+A	src/components/coach/CoachHeader.tsx
+A	src/components/coach/InsightsPanel.tsx
+A	src/components/coach/MonthlyReport.tsx
+A	src/components/diet/DietCoach.tsx
+A	src/components/diet/DietHeader.tsx
+A	src/components/diet/DietOnboarding.tsx
+A	src/components/diet/FridgeMode.tsx
+A	src/components/diet/MealCard.tsx
+A	src/components/diet/ShoppingList.tsx
+A	src/components/evolution/HistoryTimeline.tsx
+A	src/components/evolution/MeasurementChart.tsx
+A	src/components/evolution/PhotoGallery.tsx
+A	src/components/evolution/StatCard.tsx
+A	src/components/inputs/Input.tsx
+A	src/components/layout/AppLayout.tsx
+A	src/components/layout/BottomNav.tsx
+A	src/components/modals/HomeEquipmentModal.tsx
+A	src/components/profile/InviteFriendsInfo.tsx
+A	src/components/progress/BodyRecordForm.tsx
+A	src/components/progress/ComparisonCard.tsx
+A	src/components/progress/EvolutionCharts.tsx
+A	src/components/progress/EvolutionGallery.css
+A	src/components/progress/EvolutionGallery.tsx
+A	src/components/progress/ExerciseEvolution.tsx
+A	src/components/progress/PhotoUploadModal.tsx
+A	src/components/progress/SummaryCards.tsx
+A	src/components/progress/Timeline.tsx
+A	src/components/run/RunReady.tsx
+A	src/components/run/RunSummary.tsx
+A	src/components/run/RunTracker.tsx
+A	src/components/today/CaloriesCard.tsx
+A	src/components/today/DailyGoalsCard.tsx
+A	src/components/today/HydrationCard.tsx
+A	src/components/today/RoutineSetupCard.tsx
+A	src/components/ui/AlarmModal.tsx
+A	src/components/ui/Button.tsx
+A	src/components/ui/Card.tsx
+A	src/components/workout/HomeEquipmentForm.tsx
+A	src/components/workout/WorkoutModeSelector.tsx
+A	src/config/navigation.ts
+A	src/data/exercises.ts
+A	src/hooks/useRoutineAlarm.ts
+A	src/i18n.ts
+A	src/lib/CoachContextBuilder.ts
+A	src/lib/coachLogic.ts
+A	src/lib/dietLogic.ts
+A	src/lib/foodDatabase.ts
+A	src/lib/mealBuilder.ts
+A	src/lib/planner.ts
+A	src/lib/runLogic.test.ts
+A	src/lib/runLogic.ts
+A	src/lib/runService.ts
+A	src/lib/sound.ts
+A	src/lib/workout_logic.ts
+A	src/locales/de.json
+A	src/locales/en.json
+A	src/locales/pt.json
+A	src/main.tsx
+A	src/pages/Dashboard.tsx
+A	src/pages/Onboarding.tsx
+A	src/pages/settings/PrivacyPolicy.tsx
+A	src/pages/subscription/SubscriptionView.tsx
+A	src/pages/tabs/Coach.tsx
+A	src/pages/tabs/Diet.tsx
+A	src/pages/tabs/Hydration.tsx
+A	src/pages/tabs/Profile.tsx
+A	src/pages/tabs/Progress.css
+A	src/pages/tabs/Progress.tsx
+A	src/pages/tabs/Run.tsx
+A	src/pages/tabs/Today.tsx
+A	src/pages/tabs/Workout.css
+A	src/pages/tabs/Workout.tsx
+A	src/pages/workout/WorkoutPlayer.tsx
+A	src/services/AdManager.ts
+A	src/services/AdService.ts
+A	src/services/BillingServiceFactory.ts
+A	src/services/CoachService.ts
+A	src/services/GooglePlayBillingService.ts
+A	src/services/IBillingService.ts
+A	src/services/MockBillingService.ts
+A	src/store/coachStore.ts
+A	src/store/dietStore.ts
+A	src/store/evolutionStore.ts
+A	src/store/runStore.ts
+A	src/store/userStore.ts
+A	src/styles/global.css
+A	src/styles/variables.css
+A	src/types/diet.ts
+A	src/types/index.ts
+A	src/types/workout.ts
+A	src/vite-env.d.ts
+A	tsconfig.json
+A	tsconfig.node.json
+A	verify_female.ts
+A	verify_goals.ts
+A	verify_nutrition.ts
+A	verify_schedule.ts
+A	vite.config.ts

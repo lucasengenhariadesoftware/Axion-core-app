@@ -20,14 +20,18 @@ export const MusicPlayer: React.FC = () => {
         const loadTracks = async () => {
             try {
                 const persisted = await getTracksFromDB();
-                const loaded: Track[] = persisted.map(pt => ({
-                    id: pt.id,
-                    title: pt.title,
-                    artist: pt.artist,
-                    duration: pt.duration,
-                    color: pt.color,
-                    src: URL.createObjectURL(pt.file)
-                }));
+                const loaded: Track[] = persisted.map(pt => {
+                    // Reconstruct Blob from ArrayBuffer
+                    const blob = new Blob([pt.fileData], { type: pt.fileType });
+                    return {
+                        id: pt.id,
+                        title: pt.title,
+                        artist: pt.artist,
+                        duration: pt.duration,
+                        color: pt.color,
+                        src: URL.createObjectURL(blob)
+                    };
+                });
                 setTracks(loaded);
             } catch (error) {
                 console.error("Failed to load tracks from DB", error);
@@ -49,27 +53,40 @@ export const MusicPlayer: React.FC = () => {
     const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files;
         if (files) {
-            const newPersisted: PersistedTrack[] = Array.from(files).map((file, index) => ({
-                id: Date.now() + index,
-                title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
-                artist: "Dispositivo Local",
-                duration: "...",
-                color: `linear-gradient(135deg, ${getRandomColor()} 0%, ${getRandomColor()} 100%)`,
-                file: file
-            }));
-
             try {
+                const newPersisted: PersistedTrack[] = [];
+                const newTracks: Track[] = [];
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const arrayBuffer = await file.arrayBuffer();
+                    
+                    const id = Date.now() + i;
+                    const color = `linear-gradient(135deg, ${getRandomColor()} 0%, ${getRandomColor()} 100%)`;
+                    
+                    const pt: PersistedTrack = {
+                        id,
+                        title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+                        artist: "Dispositivo Local",
+                        duration: "...",
+                        color,
+                        fileData: arrayBuffer,
+                        fileType: file.type || 'audio/mpeg'
+                    };
+                    
+                    newPersisted.push(pt);
+
+                    newTracks.push({
+                        id: pt.id,
+                        title: pt.title,
+                        artist: pt.artist,
+                        duration: pt.duration,
+                        color: pt.color,
+                        src: URL.createObjectURL(new Blob([pt.fileData], { type: pt.fileType }))
+                    });
+                }
+
                 await saveTracksToDB(newPersisted);
-
-                const newTracks: Track[] = newPersisted.map(pt => ({
-                    id: pt.id,
-                    title: pt.title,
-                    artist: pt.artist,
-                    duration: pt.duration,
-                    color: pt.color,
-                    src: URL.createObjectURL(pt.file)
-                }));
-
                 setTracks((prev) => [...prev, ...newTracks]);
             } catch (error) {
                 console.error("Failed to save tracks to DB", error);

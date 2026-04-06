@@ -189,7 +189,7 @@ export const ChatInterface = () => {
 
             {/* Input Area */}
             <div style={{
-                padding: '16px',
+                padding: '16px 16px 100px 16px',
                 background: 'white',
                 borderTop: '1px solid #f1f5f9'
             }}>

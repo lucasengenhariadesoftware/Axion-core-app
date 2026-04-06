@@ -238,6 +238,13 @@ export default function ProgressTab() {
                             <BookOpen size={24} />
                         </div>
                         <h3 className="feature-title">Perimetria</h3>
+                        <button 
+                            className="header-add-button"
+                            onClick={() => setIsFormOpen(true)}
+                            aria-label="Nova Avaliação"
+                        >
+                            <Plus size={20} />
+                        </button>
                     </div>
 
                     <div className="perimetry-list">
@@ -262,19 +269,7 @@ export default function ProgressTab() {
 
             </div>
 
-            {/* FAB */}
-            {/* FAB */}
-            <button
-                onClick={() => setIsFormOpen(true)}
-                className="fab-primary"
-                aria-label="Nova Avaliação"
-                style={{
-                    bottom: useUserStore.getState().isPremium ? '90px' : '160px', // Adjusted significantly for Free Ad Space
-                    transition: 'bottom 0.3s ease'
-                }}
-            >
-                <Plus size={28} />
-            </button>
+
         </div>
     );
 }

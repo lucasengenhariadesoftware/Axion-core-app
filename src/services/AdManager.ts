@@ -24,7 +24,9 @@ class AdManagerService {
     // Use Test ID for specific development/test scenarios if needed, but per request we use Prod ID in code 
     // and rely on AdMob Test Mode on devices. However, strict adherence to guidelines suggests using Test IDs 
     // during development. I will implement a check.
-    private readonly PROD_INTERSTITIAL_ID = 'ca-app-pub-7774247906326215/8167320817';
+    private readonly PROD_INTERSTITIAL_ID = 'ca-app-pub-7774247906326215/8593384115';
+    private readonly PROD_DIET_INTERSTITIAL_ID = 'ca-app-pub-7774247906326215/6121331696';
+    private currentAdType: 'workout' | 'diet' = 'workout';
     // Google Generic Test ID for Interstitial
     private readonly TEST_INTERSTITIAL_ID = 'ca-app-pub-3940256099942544/1033173712';
 
@@ -84,7 +86,7 @@ class AdManagerService {
                 AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
                     this.isAdLoaded = false;
                     this.recordAdShown();
-                    this.preloadInterstitial(); // Auto reload next
+                    this.preloadInterstitial(this.currentAdType); // Auto reload next
                 });
 
                 // Reward Listeners
@@ -117,21 +119,23 @@ class AdManagerService {
         }
     }
 
-    public async preloadInterstitial() {
+    public async preloadInterstitial(adType: 'workout' | 'diet' = 'workout', ignoreCooldown: boolean = false) {
         if (!this.IS_native) return;
-        if (this.isAdLoaded || this.isLoading) return;
+        if (this.isAdLoaded && this.currentAdType === adType) return;
+        if (this.isLoading) return;
 
         // Check limits before loading to save bandwidth? 
-        // AdMob guidelines say it's okay to pre-fetch, but if we are capped, maybe wait.
-        if (this.isCapped()) {
+        // AdMob guidelines say it's okay to pre-fetch, but if we are capped, maybe wait(unless bypassing).
+        if (!ignoreCooldown && this.isCapped()) {
             console.log('[AdManager] Daily cap reached or cooldown active. Delaying preload.');
             return;
         }
 
         try {
             this.isLoading = true;
+            this.currentAdType = adType;
             await AdMob.prepareInterstitial({
-                adId: this.getAdUnitId(),
+                adId: this.getAdUnitId(adType),
                 isTesting: import.meta.env.DEV, // Use true for safety during dev
             });
         } catch (error) {
@@ -145,7 +149,7 @@ class AdManagerService {
      * Returns true if ad was shown, false otherwise.
      * Always resolves, never rejects (unless critical error), so app flow continues.
      */
-    public async showInterstitial(): Promise<boolean> {
+    public async showInterstitial(ignoreCooldown: boolean = false, adType: 'workout' | 'diet' = 'workout'): Promise<boolean> {
         // 0. Check Premium
         if (useUserStore.getState().isPremium) {
             console.log('[AdManager] Premium user - Ad skipped');
@@ -153,7 +157,7 @@ class AdManagerService {
         }
 
         // 1. Check constraints
-        if (this.isCapped()) {
+        if (!ignoreCooldown && this.isCapped()) {
             console.log('[AdManager] Ad blocked: Frequency Cap or Cooldown');
             return false;
         }
@@ -169,7 +173,7 @@ class AdManagerService {
                     color: white; font-family: system-ui;
                 `;
                 overlay.innerHTML = `
-                    <h1>AdMob Interstitial (Mock)</h1>
+                    <h1>AdMob Interstitial (${adType} Mock)</h1>
                     <p>This would be a real ad on a device.</p>
                     <button style="padding: 12px 24px; background: #2563EB; color: white; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer;">
                         Close Ad
@@ -189,22 +193,38 @@ class AdManagerService {
         }
 
         // 3. Native Show
-        if (!this.isAdLoaded) {
-            console.log('[AdManager] Ad not loaded yet. Attempting lazy load...');
-            await this.preloadInterstitial();
-            // We generally don't wait for load here to avoid blocking UI. 
-            // If it wasn't ready, we skip.
-            return false;
+        if (!this.isAdLoaded || this.currentAdType !== adType) {
+            console.log(`[AdManager] Ad not loaded yet for ${adType}. Attempting lazy load...`);
+            await this.preloadInterstitial(adType, ignoreCooldown);
+            
+            let retries = 0;
+            while (!this.isAdLoaded && retries < 20) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+                retries++;
+            }
+
+            if (!this.isAdLoaded) {
+                console.log(`[AdManager] Ad still not loaded for ${adType}. Skipping.`);
+                return false;
+            }
         }
 
-        try {
-            await AdMob.showInterstitial();
-            return true;
-        } catch (error) {
-            console.error('[AdManager] Failed to show ad', error);
-            // If show fails, we assume flow continues
-            return false;
-        }
+        return new Promise(async (resolve) => {
+            let dismissListener: any = null;
+            
+            try {
+                dismissListener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+                    if (dismissListener) dismissListener.remove();
+                    resolve(true);
+                });
+
+                await AdMob.showInterstitial();
+            } catch (error) {
+                console.error('[AdManager] Failed to show ad', error);
+                if (dismissListener) dismissListener.remove();
+                resolve(false);
+            }
+        });
     }
 
     // --- BANNER LOGIC ---
@@ -226,7 +246,7 @@ class AdManagerService {
             await AdMob.showBanner({
                 adId: this.getBannerAdUnitId(),
                 position: BannerAdPosition.BOTTOM_CENTER,
-                adSize: BannerAdSize.FULL_BANNER,
+                adSize: BannerAdSize.ADAPTIVE_BANNER,
                 margin: 0,
             });
             this.isBannerVisible = true;
@@ -261,25 +281,11 @@ class AdManagerService {
         if (!this.IS_native) return;
         this.stopBannerRefresh();
 
-        this.bannerIntervalId = setInterval(async () => {
-            if (this.isBannerVisible && !useUserStore.getState().isPremium) {
-                console.log('[AdManager] Refreshing Banner (45s loop)...');
-                try {
-                    await AdMob.hideBanner();
-                    // Slight delay to ensure it's removed before showing again
-                    setTimeout(async () => {
-                        await AdMob.showBanner({
-                            adId: this.getBannerAdUnitId(),
-                            position: BannerAdPosition.BOTTOM_CENTER,
-                            adSize: BannerAdSize.FULL_BANNER,
-                            margin: 0,
-                        });
-                    }, 500);
-                } catch (e) {
-                    console.error('[AdManager] Error refreshing banner', e);
-                }
-            }
-        }, this.BANNER_REFRESH_MS);
+        // Manual Javascript refresh is removed because it causes the banner to disappear
+        // for several seconds (leaving the "Carregando Anúncio..." screen blank), and sometimes fails to load again. 
+        // AdMob SDK handles infinite seamless refresh internally!
+        // To configure the refresh rate, change it in your Google AdMob Dashboard:
+        // -> Apps -> Ad units -> Edit banner -> "Automatic refresh" -> "Google optimized" or "Custom".
     }
 
     private stopBannerRefresh() {
@@ -462,7 +468,7 @@ class AdManagerService {
         }
     }
 
-    private getAdUnitId(): string {
+    private getAdUnitId(adType: 'workout' | 'diet' = 'workout'): string {
         // Always use Test ID for development builds
         if (import.meta.env.DEV) {
             return this.TEST_INTERSTITIAL_ID;
@@ -470,7 +476,7 @@ class AdManagerService {
         // In production (built app), use real ID. 
         // Note: Capacitor doesn't always strictly define 'production' environment variable the same way as web.
         // We assume standard Vite build process.
-        return this.PROD_INTERSTITIAL_ID;
+        return adType === 'diet' ? this.PROD_DIET_INTERSTITIAL_ID : this.PROD_INTERSTITIAL_ID;
     }
 
     private checkDailyReset() {

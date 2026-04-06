@@ -27,7 +27,7 @@ export default function PrivacyPolicy() {
                 </p>
 
                 <p style={{ fontSize: '12px', opacity: 0.7, marginBottom: '32px' }}>
-                    Última atualização: 19 de Fevereiro de 2026
+                    Última atualização: 12 de Março de 2026
                 </p>
 
                 <Section title="1. Coleta e Armazenamento de Dados">
@@ -71,16 +71,26 @@ export default function PrivacyPolicy() {
                     </ul>
                 </Section>
 
-                <Section title="5. Permissões do Dispositivo">
-                    <p>O aplicativo pode solicitar as seguintes permissões:</p>
+                <Section title="5. Reprodutor de Música e Arquivos de Áudio">
+                    <p>
+                        O aplicativo possui um recurso de "Music Player" interno que permite ouvir músicas durante o treino.
+                    </p>
                     <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '8px' }}>
-                        <li><strong>Câmera e Galeria:</strong> Para permitir que você adicione fotos ao seu perfil ou diário de evolução.</li>
-                        <li><strong>Notificações:</strong> Para lembretes de treino e relatórios semanais.</li>
-                        <li><strong>Músicas e Áudio:</strong> O app acessa arquivos de áudio locais para permitir que o usuário selecione músicas do próprio dispositivo para reprodução durante o treino.</li>
+                        <li><strong>Processamento Local:</strong> Qualquer arquivo de áudio selecionado por você é copiado e armazenado <strong>apenas no banco de dados interno</strong> (IndexedDB) do seu dispositivo móvel associado ao aplicativo.</li>
+                        <li><strong>Sem Upload:</strong> Seus arquivos de áudio, músicas ou gravações <strong>nunca</strong> são enviados, transferidos ou copiados para nossos servidores ou para a nuvem.</li>
                     </ul>
                 </Section>
 
-                <Section title="6. Exclusão de Dados">
+                <Section title="6. Permissões do Dispositivo">
+                    <p>O aplicativo pode solicitar as seguintes permissões:</p>
+                    <ul style={{ listStyleType: 'disc', paddingLeft: '20px', marginTop: '8px' }}>
+                        <li><strong>Câmera e Galeria:</strong> Para permitir que você adicione fotos ao seu perfil ou diário de evolução.</li>
+                        <li><strong>Notificações:</strong> Para lembretes de rotina, treinos e relatórios semanais.</li>
+                        <li><strong>Músicas e Áudio:</strong> O app acessa arquivos de áudio locais para permitir que você os importe e salve de forma privada no aplicativo para reprodução durante o treino.</li>
+                    </ul>
+                </Section>
+
+                <Section title="7. Exclusão de Dados">
                     <p>
                         Você tem total controle sobre seus dados.
                     </p>
@@ -91,12 +101,12 @@ export default function PrivacyPolicy() {
                     </ul>
                 </Section>
 
-                <Section title="7. Contato">
+                <Section title="8. Contato">
                     <p>
                         Se tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco pelo e-mail:
                     </p>
                     <p style={{ color: 'var(--color-primary)', fontWeight: 700, marginTop: '8px' }}>
-                        support@axion.app
+                        lucase.silvasoares1@gmail.com
                     </p>
                 </Section>
 

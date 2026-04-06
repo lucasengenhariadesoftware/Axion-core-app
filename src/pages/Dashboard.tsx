@@ -4,6 +4,7 @@ import { generateDailyPlan, DailyPlan } from '../lib/planner';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Trophy, Droplets, Utensils, Dumbbell, CheckCircle2, Circle, Flame } from 'lucide-react';
+import { NotesAccordion } from '../components/today/NotesAccordion';
 
 export default function Dashboard() {
     const { profile } = useUserStore();
@@ -205,6 +206,11 @@ export default function Dashboard() {
                         </Button>
                     </div>
                 </Card>
+            </section>
+
+            {/* Notes Accordion */}
+            <section>
+                <NotesAccordion />
             </section>
         </div>
     );

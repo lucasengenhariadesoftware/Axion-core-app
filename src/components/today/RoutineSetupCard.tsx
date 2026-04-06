@@ -5,6 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { useUserStore } from '../../store/userStore';
 import { RoutineItem } from '../../types/diet';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
 export default function RoutineSetupCard() {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function RoutineSetupCard() {
     const [endTime, setEndTime] = useState('17:00');
     const [alarmEnabled, setAlarmEnabled] = useState(false);
 
-    const handleAdd = () => {
+    const handleAdd = async () => {
         if (!title.trim()) return;
 
         const newItem: RoutineItem = {
@@ -29,6 +30,37 @@ export default function RoutineSetupCard() {
             completed: false,
             alarmEnabled
         };
+
+        if (alarmEnabled) {
+            try {
+                const [hours, minutes] = startTime.split(':').map(Number);
+                const now = new Date();
+                let scheduleDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0);
+                
+                // If time already passed today, schedule for tomorrow
+                if (scheduleDate.getTime() <= now.getTime()) {
+                    scheduleDate.setDate(scheduleDate.getDate() + 1);
+                }
+
+                const activityName = type === 'work' ? 'Trabalhar' : type === 'study' ? 'Estudar' : type === 'training' ? 'Treinar' : 'sua atividade';
+
+                await LocalNotifications.schedule({
+                    notifications: [
+                        {
+                            title: `Rotina: ${title}`,
+                            body: `Chegou a hora de ${activityName}! (${startTime} - ${endTime})`,
+                            id: Math.floor(Math.random() * 100000),
+                            schedule: { on: { hour: hours, minute: minutes }, allowWhileIdle: true },
+                            channelId: 'routine-alarms',
+                            actionTypeId: 'ALARM_ACTIONS',
+                            extra: { title, time: startTime }
+                        }
+                    ]
+                });
+            } catch (error) {
+                console.error("Erro ao agendar notificação:", error);
+            }
+        }
 
         // @ts-ignore
         addRoutineItem(newItem);
